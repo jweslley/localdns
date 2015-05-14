@@ -1,0 +1,11 @@
+author: "Jonhnny Weslley"
+description: "A DNS for local development"
+filesets:
+  includes:
+  - README.md
+  - LICENSE
+  excludes:
+  - \.git
+  - .*\.go
+settings:
+  build: go install -v
