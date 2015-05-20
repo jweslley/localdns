@@ -19,7 +19,7 @@ localdns is designed to respond to DNS queries for all subdomains of the specifi
 
 > Installing using `yaourt` also creates a systemd service: `localdns.service`.
 
-## Mac OSX
+## Mac OSX (Homebrew)
 
     brew tap jweslley/formulae
     brew install localdns
