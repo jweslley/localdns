@@ -4,8 +4,10 @@ filesets:
   includes:
   - README.md
   - LICENSE
+  - ext
   excludes:
   - \.git
   - .*\.go
+  depth: 3
 settings:
   build: go install -v

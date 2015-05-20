@@ -1,0 +1,9 @@
+[Unit]
+Description=localdns
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/localdns -tld dev -port 53
+
+[Install]
+WantedBy=default.target
