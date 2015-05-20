@@ -9,17 +9,17 @@ localdns is designed to respond to DNS queries for all subdomains of the specifi
 
 ## Installation
 
-## General
+### General
 
 [Download](https://github.com/jweslley/localdns/releases) and put the binary somewhere in your path.
 
-## Archlinux (AUR package)
+### Archlinux (AUR package)
 
     yaourt -S localdns
 
 > Installing using `yaourt` also creates a systemd service: `localdns.service`.
 
-## Mac OSX (Homebrew)
+### Mac OSX (Homebrew)
 
     brew tap jweslley/formulae
     brew install localdns
