@@ -11,10 +11,9 @@ import (
 	"github.com/miekg/dns"
 )
 
-const programVersion = "0.1.0"
-
 var (
-	ip4loopback = net.IPv4(127, 0, 0, 1)
+	programVersion = "dev"
+	ip4loopback    = net.IPv4(127, 0, 0, 1)
 
 	// flags
 	tld     = flag.String("tld", "dev", "Top-level domain to resolve to localhost")

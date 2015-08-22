@@ -1,31 +1,35 @@
+PROGRAM=localdns
 VERSION=0.1.0
+LDFLAGS="-X main.programVersion=$(VERSION)"
 
-all: tests
+all: test
 
 deps:
 	go get ./...
 
-build: deps
-	go build
+install: deps
+	go install -a -v -ldflags $(LDFLAGS)
 
-tests: build
-	go test -v
+test: deps
+	go test -v ./...
 
-qa: build
+qa:
 	go vet
 	golint
-	go test -coverprofile=.localdns.cover~
-	go tool cover -html=.localdns.cover~
+	go test -coverprofile=.cover~
+	go tool cover -html=.cover~
 
 dist:
-	packer --os linux  --arch amd64 --output localdns-linux-amd64-$(VERSION).zip
-	rm localdns
-	packer --os linux  --arch 386   --output localdns-linux-386-$(VERSION).zip
-	rm localdns
-	packer --os darwin --arch amd64 --output localdns-mac-amd64-$(VERSION).zip
-	rm localdns
-	packer --os darwin --arch 386   --output localdns-mac-386-$(VERSION).zip
-	rm localdns
+	@for os in linux darwin; do \
+		for arch in 386 amd64; do \
+			target=$(PROGRAM)-$$os-$$arch-$(VERSION); \
+			echo Building $$target; \
+			GOOS=$$os GOARCH=$$arch go build -ldflags $(LDFLAGS) -o $$target/$(PROGRAM) ; \
+			cp -r ./ext/$$os/* ./README.md ./LICENSE $$target; \
+			tar -zcf $$target.tar.gz $$target; \
+			rm -rf $$target;                   \
+		done                                 \
+	done
 
 clean:
-	rm -f ./localdns *.zip
+	rm -rf *.tar.gz
