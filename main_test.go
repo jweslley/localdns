@@ -9,9 +9,7 @@ import (
 )
 
 func TestLocalDNS(t *testing.T) {
-	*tld = ".dev."
-
-	dns.HandleFunc(".", localdns)
+	dns.HandleFunc("dev.", localdns)
 
 	s, addrstr, err := RunLocalUDPServer("127.0.0.1:0")
 	if err != nil {
@@ -60,7 +58,7 @@ func TestLocalDNS(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to exchange %s: %v", question, err)
 		}
-		if r.Rcode != dns.RcodeNameError {
+		if r.Rcode != dns.RcodeServerFailure {
 			t.Errorf("Wrong rocde: got %d; expected %d", r.Rcode, dns.RcodeNameError)
 		}
 	}

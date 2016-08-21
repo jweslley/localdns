@@ -16,7 +16,7 @@ var (
 	ip4loopback    = net.IPv4(127, 0, 0, 1)
 
 	// flags
-	tld     = flag.String("tld", "dev", "Top-level domain to resolve to localhost")
+	tld     = flag.String("tld", "dev", "Comma-separated list of top-level domains to resolve to localhost. Example: dev,test")
 	ttl     = flag.Int("ttl", 600, "DNS's TTL (Time to live)")
 	port    = flag.Int("port", 5353, "DNS's port")
 	version = flag.Bool("v", false, "print version information and exit")
@@ -34,13 +34,7 @@ func localdns(w dns.ResponseWriter, r *dns.Msg) {
 		return
 	}
 
-	domain := dns.Fqdn(q.Name)
-	if !strings.HasSuffix(domain, *tld) {
-		m := new(dns.Msg)
-		m.SetRcode(r, dns.RcodeNameError)
-		w.WriteMsg(m)
-		return
-	}
+	log.Printf("%s lookup %s %s %s\n", w.RemoteAddr(), q.Name, dns.ClassToString[q.Qclass], dns.TypeToString[q.Qtype])
 
 	m := new(dns.Msg)
 	m.SetReply(r)
@@ -75,16 +69,15 @@ func main() {
 		log.Fatalln("localdns: tld required")
 	}
 
-	*tld = dns.Fqdn(*tld)
-	if (*tld)[0] != '.' {
-		*tld = fmt.Sprintf(".%s", *tld)
+	tlds := strings.Split(*tld, ",")
+	for _, tld := range tlds {
+		tld = dns.Fqdn(tld)
+		log.Printf("localdns will respond 'localhost' to queries in %s", tld)
+		dns.HandleFunc(tld, localdns)
 	}
-
-	dns.HandleFunc(".", localdns)
 
 	addr := fmt.Sprintf(":%d", *port)
 	log.Printf("Starting localdns at %s\n", addr)
-	log.Printf("localdns will respond 'localhost' to queries in %s domain", *tld)
 	go func() {
 		err := dns.ListenAndServe(addr, "udp", nil)
 		if err != nil {
