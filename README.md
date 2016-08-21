@@ -1,6 +1,7 @@
 # localdns
 
 [![Travis](https://api.travis-ci.org/jweslley/localdns.png)](http://travis-ci.org/jweslley/localdns)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jweslley/localdns)](https://goreportcard.com/report/github.com/jweslley/localdns)
 
 A DNS for local development. Editing hosts file to add and remove host names for local development is no longer needed.
 
