@@ -7,6 +7,9 @@ A DNS for local development. Editing hosts file to add and remove host names for
 
 localdns is designed to respond to DNS queries for all subdomains of the specified top-level domain with localhost address. Since it supports both IPv4 and IPv6, localdns will respond accordingly to, i.e., it will respond to DNS `A` queries with `127.0.0.1` and `AAAA` queries with `::1`.
 
+localdns also can be used as a DNS proxy. This feature is specially useful in Windows since default Windows DNS's client [does not query a secondary DNS](https://groups.google.com/forum/#!topic/microsoft.public.windows.server.active_directory/wcNs42YNKeo) before a [15 minute timeout](https://support.microsoft.com/en-us/kb/320760/en-us?p=1).
+
+Supports Linux, Mac OSX and Windows! \o/
 
 ## Installation
 
@@ -44,6 +47,17 @@ For more command options, run `localdns -h`:
     -tld="dev": Top-level domain to resolve to localhost
     -port=5353: DNS's port
     -ttl=600: DNS's TTL (Time to live)
+    -debug: enable verbose logging
+
+    -proxy: Enable proxy mode. comma-separated list of DNS servers to send queries for. Example: 8.8.8.8,8.8.4.4
+    -timeout=2s: when acting as proxy, timeout for dial, write and read.
+    -expire=10m: when acting as proxy, cache expiration time.
+    -cache=65536: when acting as proxy, the cache size.
+
+In Windows, is recommended to enable the proxy mode. For example, run:
+
+    localdns -proxy 8.8.8.8,8.8.4.4
+
 
 ## Test usage
 
@@ -56,7 +70,7 @@ Executing a query using `drill`:
 Outputs:
 
     ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 21160
-    ;; flags: qr rd ; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0 
+    ;; flags: qr rd ; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
     ;; QUESTION SECTION:
     ;; myapp.dev.   IN      A
 
